@@ -5,6 +5,9 @@ import axios from 'axios'
 import { Loading } from './views/Loading';
 import { CryptoTable } from './views/CryptoTable';
 
+const apiBaseUri = window.location.hostname === "localhost" ?
+  "http://localhost:3000" : "https://8d9vin02wd.execute-api.us-east-1.amazonaws.com/dev"
+
 function App() {
   const [cryptos, setCryptos] = useState(undefined)
 
@@ -13,7 +16,7 @@ function App() {
   }, [])
 
   const getData = async () => {
-    const result = await axios.get('https://8d9vin02wd.execute-api.us-east-1.amazonaws.com/dev/v1/prices')
+    const result = await axios.get(apiBaseUri + '/v1/prices')
     setCryptos(result.data.cryptos)
   }
 
