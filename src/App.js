@@ -1,23 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios'
 
 function App() {
+  const [prices, setPrices] = useState([])
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const result = await axios.get('https://8d9vin02wd.execute-api.us-east-1.amazonaws.com/dev/v1/prices')
+    setPrices(result.data)
+    console.log(result)
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {JSON.stringify(prices)}
       </header>
     </div>
   );
