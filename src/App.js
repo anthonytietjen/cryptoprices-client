@@ -1,30 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import axios from 'axios'
+import { loadData, saveData } from './api/api'
 import { Loading } from './views/Loading';
 import { CryptoTable } from './views/CryptoTable';
-
-const apiBaseUri = window.location.hostname === "localhost" ?
-  "http://localhost:3000" : "https://8d9vin02wd.execute-api.us-east-1.amazonaws.com/dev"
+import { CryptoForm } from './views/CryptoForm'
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
   const [cryptos, setCryptos] = useState(undefined)
+  const [pricePoints, setPricePoints] = useState({})
 
   useEffect(() => {
     getData()
   }, [])
 
   const getData = async () => {
-    const result = await axios.get(apiBaseUri + '/v1/prices')
-    setCryptos(result.data.cryptos)
+    const result = await loadData()
+    setCryptos(result.cryptos)
+    setPricePoints(result.pricePoints || {})
+    setIsLoading(false)
   }
 
-  if (!cryptos) {
+  const handleSave = async (pricePoints) => {
+    setIsLoading(true)
+    await saveData(pricePoints)
+    setPricePoints(pricePoints)
+    setIsLoading(false)
+  }
+
+  if (isLoading) {
     return <Loading />
   }
 
-  return <CryptoTable cryptos={cryptos} />
+  return (
+    <div className="App">
+      <header className="App-header">
+        <CryptoTable
+          cryptos={cryptos}
+        />
+        <CryptoForm
+          data={pricePoints}
+          handleSave={handleSave}
+        />
+      </header>
+    </div>
+  )
 }
 
 export default App;
