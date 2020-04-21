@@ -8,7 +8,7 @@ export const loadData = async () => {
   return response.data
 }
 
-export const saveData = async (pricePoints) => {
+export const savePricePoints = async (pricePoints) => {
   const data = {
     pricePoints
   }
